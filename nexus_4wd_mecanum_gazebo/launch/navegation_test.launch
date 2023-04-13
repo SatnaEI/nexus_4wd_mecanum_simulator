@@ -1,0 +1,7 @@
+<launch>
+<arg name="scan_topic" default="laser/scan"/>
+<node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+<param name="odom_frame" value="/odom"/>
+<remap from="scan" to="laser/scan"/>
+</node>
+</launch>

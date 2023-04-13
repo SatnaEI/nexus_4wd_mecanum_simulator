@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+
+  <node pkg="explore_lite" type="explore" respawn="true" name="explore" output="screen">
+    <rosparam file="$(find nexus_4wd_mecanum_gazebo)/config/exploration.yaml" command="load" />
+  </node>
+
+</launch>
