@@ -18,10 +18,10 @@ find_package(catkin REQUIRED COMPONENTS
 include_directories(include ${catkin_INCLUDE_DIRS})
 
 ## Find gazebo
-find_package(gazebo REQUIRED)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
-include_directories(${GAZEBO_INCLUDE_DIRS})
-link_directories(${GAZEBO_LIBRARY_DIRS})
+#find_package(gazebo REQUIRED)
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
+#include_directories(${GAZEBO_INCLUDE_DIRS})
+#link_directories(${GAZEBO_LIBRARY_DIRS})
 
 ## Find Boost
 find_package(Boost REQUIRED COMPONENTS thread)
