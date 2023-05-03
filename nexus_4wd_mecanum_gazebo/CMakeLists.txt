@@ -9,23 +9,14 @@ find_package(catkin REQUIRED COMPONENTS
   #gazebo-dev
   nav_msgs
   roscpp
+  rospy
   std_msgs
   std_srvs
   tf
   message_generation
 )
 
-include_directories(include ${catkin_INCLUDE_DIRS})
 
-## Find gazebo
-#find_package(gazebo REQUIRED)
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
-#include_directories(${GAZEBO_INCLUDE_DIRS})
-#link_directories(${GAZEBO_LIBRARY_DIRS})
-
-## Find Boost
-find_package(Boost REQUIRED COMPONENTS thread)
-include_directories(${Boost_INCLUDE_DIRS})
 
 
 catkin_package(
@@ -37,8 +28,23 @@ catkin_package(
 ###########
 ## Build ##
 ###########
-add_library(nexus_ros_force_based_move src/nexus_ros_force_based_move.cpp)
-target_link_libraries(nexus_ros_force_based_move ${Boost_LIBRARIES} ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES})
+
+include_directories(
+# include
+  ${catkin_INCLUDE_DIRS}
+)
+
+#add_library(nexus_ros_force_based_move src/nexus_ros_force_based_move.cpp)
+#target_link_libraries(nexus_ros_force_based_move ${Boost_LIBRARIES} ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES})
+#add_executable(tf_broadcaster src/tf_broadcaster.py)
+#add_library(nexus_old src/nexus_old.cpp)
+#target_link_libraries(nexus_old ${Boost_LIBRARIES} ${catkin_LIBRARIES})
+
+add_executable(talker src/talker.cpp)
+
+target_link_libraries(talker
+  ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##
@@ -47,39 +53,14 @@ target_link_libraries(nexus_ros_force_based_move ${Boost_LIBRARIES} ${GAZEBO_LIB
 # all install targets should use catkin DESTINATION variables
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
 
-install(PROGRAMS
-    src/tf_broadcaster.py
-#   scripts/my_python_script
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
+#install(PROGRAMS
+#    src/tf_broadcaster.py
+##   scripts/my_python_script
+#  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+#)
 
 catkin_install_python(PROGRAMS
-    src/tf_broadcaster.py
+  src/tf_broadcaster.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-  FILES_MATCHING PATTERN "*.h"
-  PATTERN ".svn" EXCLUDE
-)
-
-install(TARGETS
-  nexus_ros_force_based_move
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-#############
-## Testing ##
-#############
-
-## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_nexus_4wd_mecanum_gazebo.cpp)
-# if(TARGET ${PROJECT_NAME}-test)
-#   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
-# endif()
-
-## Add folders to be run by python nosetests
-# catkin_add_nosetests(test)

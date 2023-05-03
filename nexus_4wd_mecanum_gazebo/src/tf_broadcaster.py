@@ -1,5 +1,4 @@
 import rospy
-from gazebo_msgs.msg import ModelStates
 from std_msgs.msg import Float64MultiArray, Float32
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import TransformStamped
