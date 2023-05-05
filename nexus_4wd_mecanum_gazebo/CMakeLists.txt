@@ -16,7 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
 )
 
-
+catkin_python_setup()
 
 
 catkin_package(
@@ -62,6 +62,7 @@ target_link_libraries(talker
 catkin_install_python(PROGRAMS
   src/tf_broadcaster.py
   src/cameraRead.py
+  src/huskylib.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
