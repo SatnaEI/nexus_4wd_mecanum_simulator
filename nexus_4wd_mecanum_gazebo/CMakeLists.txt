@@ -61,6 +61,7 @@ target_link_libraries(talker
 
 catkin_install_python(PROGRAMS
   src/tf_broadcaster.py
+  src/cameraRead.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
