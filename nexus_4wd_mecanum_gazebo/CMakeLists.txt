@@ -63,6 +63,7 @@ catkin_install_python(PROGRAMS
   src/tf_broadcaster.py
   src/cameraRead.py
   src/huskylib.py
+  src/i2cBridge.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
