@@ -25,33 +25,47 @@ def ConvertStringsToBytes(src):
   return converted
 
 def convertData(data):
+    #print("converting data", data)
     toAvoid = chr(255)
     message = ""
     for i in data:
         message = message + chr(i)
     numbers = message.split("/")
+    print(numbers)
     x = float(numbers[0])
     y = float(numbers[1])
-    theta = float(numbers[2].split(toAvoid)[0])
+    #theta = float(numbers[2].split(toAvoid)[0])
+    a1 = numbers[2].rstrip('\x01')#split(chr(92))
+    a1 = a1.rstrip('\x00')
+    a1 = a1.rstrip('\x01')
+    a1 = a1.rstrip('\x00')
+    #a2=a1[0]
+    #print(a2)
+    #print(type(a1), a1)
+    theta = float(a1)
     return (x, y, theta)
 
 def runI2CRoutine(V, W, xOdom, yOdom, tOdom):
     global I2Cbus
     with smbus.SMBus(1) as I2Cbus:
         slaveAddress = I2C_SLAVE_ADDRESS
+        time.sleep(0.1)
         #V = float(input("Enter linear: "))
         #V = 2.4
         #W = -3.6
         #W = float(input("Enter angular: "))
+        if (V==0.0) and (W==0.0):
+            V=99.0
+            W=99.0
         cmd = str(round(V,2)) + "/" + str(round(W,2))
         BytesToSend = ConvertStringsToBytes(cmd)
-        print("Sent " + str(slaveAddress) + " the " + str(cmd) + " command.")
-        print(BytesToSend )
+        #print("Sent " + str(slaveAddress) + " the " + str(cmd) + " command.")
+        #print(BytesToSend )
         try:
             I2Cbus.write_i2c_block_data(slaveAddress, 0x00, BytesToSend)
         except Exception as e:
             print("error at writing: ", e)
-        time.sleep(0.5)
+        #time.sleep(0.5)
 
 
         '''V = float(input("Enter linear: "))
@@ -68,11 +82,14 @@ def runI2CRoutine(V, W, xOdom, yOdom, tOdom):
             #print("recieve from slave")
             #print(type(data), data)
             #convertData(data)
-            return convertData(data)
+            x, y, theta = convertData(data)
+            theta = theta - 1.57    #reverting offset added by HW team
+            #print(x, y, theta)
+            return (x, y, theta)
         except Exception as e:
             print(e)
             #subprocess.run(['i2cdetect', '-y', '1'], stdout=subprocess.DEVNULL)
-            #print("remote i/o error")
+            print("remote i/o error")
             #time.sleep(1.5)
         #time.sleep(0.2)
     return (xOdom, yOdom, tOdom)
