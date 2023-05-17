@@ -7,5 +7,7 @@
    <include file="$(find rplidar_ros)/launch/rplidar.launch" />
    <node pkg="nexus_4wd_mecanum_gazebo" type="cameraRead.py" name="cameraRead" output="screen" />
    <node pkg="nexus_4wd_mecanum_gazebo" type="i2cBridge.py" name="i2cBridge" output="screen" />
+   <node pkg="nexus_4wd_mecanum_gazebo" type="doOdometry.py" name="doOdometry" output="screen" />
+   <node type="rviz" name="rviz" pkg="rviz" args="-d $(find nexus_4wd_mecanum_gazebo)/plotting.rviz" />
 
 </launch>

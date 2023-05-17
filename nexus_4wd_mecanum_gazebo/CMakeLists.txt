@@ -64,6 +64,7 @@ catkin_install_python(PROGRAMS
   src/cameraRead.py
   src/huskylib.py
   src/i2cBridge.py
+  src/doOdometry.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
