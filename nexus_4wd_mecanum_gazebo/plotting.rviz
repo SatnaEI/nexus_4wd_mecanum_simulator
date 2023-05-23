@@ -6,7 +6,6 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /LaserScan1/Status1
         - /Odometry1
       Splitter Ratio: 0.5
     Tree Height: 368
@@ -202,9 +201,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.9503960609436035
+      Pitch: 1.0553960800170898
       Target Frame: <Fixed Frame>
-      Yaw: 5.469919204711914
+      Yaw: 3.319918394088745
     Saved: ~
 Window Geometry:
   Displays:
@@ -223,4 +222,4 @@ Window Geometry:
     collapsed: true
   Width: 951
   X: 131
-  Y: 32
+  Y: 25

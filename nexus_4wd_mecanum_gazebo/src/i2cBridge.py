@@ -30,11 +30,12 @@ def convertData(data):
     message = ""
     for i in data:
         message = message + chr(i)
+    #print(message)
     numbers = message.split("/")
     #print(numbers)
-    x = float(numbers[0])
-    y = float(numbers[1])
-    theta = float(numbers[2].split(toAvoid)[0])
+    Vreal = float(numbers[0])
+    #y = float(numbers[1])
+    Wreal = float(numbers[1].split(toAvoid)[0])
     '''a1 = numbers[2].rstrip('\x01')#split(chr(92))
     a1 = a1.rstrip('\x00')
     a1 = a1.rstrip('\x01')
@@ -43,9 +44,9 @@ def convertData(data):
     #print(a2)
     #print(type(a1), a1)
     #theta = float(a1)
-    return (x, y, theta)
+    return (Vreal, Wreal)
 
-def runI2CRoutine(V, W, xOdom, yOdom, tOdom):
+def runI2CRoutine(V, W, Vreal, Wreal):
     global I2Cbus
     with smbus.SMBus(1) as I2Cbus:
         slaveAddress = I2C_SLAVE_ADDRESS
@@ -78,24 +79,24 @@ def runI2CRoutine(V, W, xOdom, yOdom, tOdom):
         print(BytesToSend )
         I2Cbus.write_i2c_block_data(slaveAddress, 0x00, BytesToSend)'''
         #Commented part to read odometry from Arduino:
-        '''time.sleep(0.2)
+        time.sleep(0.1)
         try:
-            data=I2Cbus.read_i2c_block_data(slaveAddress,0x00,20)
+            data=I2Cbus.read_i2c_block_data(slaveAddress,0x00,7)
             #print("recieve from slave")
             #print(type(data), data)
             #convertData(data)
-            y, x, theta = convertData(data)	#inversing x an y because HW frame is rotated
-            theta = theta - 1.57    #reverting offset added by HW team
+            Vreal, Wreal = convertData(data)	#inversing x an y because HW frame is rotated
+            #theta = theta - 1.57    #reverting offset added by HW team
             #print(x, y, theta)
-            print("Read data: ", x, y, theta)
-            return (x, y, theta)
+            print("Read data: ", Vreal, Wreal)
+            return (Vreal, Wreal)
         except Exception as e:
             print(e)
             #subprocess.run(['i2cdetect', '-y', '1'], stdout=subprocess.DEVNULL)
             print("remote i/o error")
             #time.sleep(1.5)
-        #time.sleep(0.2)'''
-    return (xOdom, yOdom, tOdom)
+        #time.sleep(0.2)
+    return (Vreal, Wreal)
     
 
 def callbackSub(cmd):
@@ -108,15 +109,15 @@ def callbackSub(cmd):
 
 def i2cBridge():
     global V, W
-    ##odomPub = rospy.Publisher('/odom', Odometry, queue_size=1)
+    velocPub = rospy.Publisher('/robotSpeed', Twist, queue_size=1)
     #ball_pub = rospy.Publisher('ball_position', PoseStamped, queue_size=1)
     rospy.init_node('i2cBridge', anonymous=True)
     rate = rospy.Rate(10) # 5hz
     cmdVelSub = rospy.Subscriber('/cmd_vel',Twist,callbackSub)
-    xOdom, yOdom, tOdom = (0, 0, 1.57)
+    Vreal, Wreal = (0,0)
     while not rospy.is_shutdown():
-        ##odomPosition = Odometry()
-        xOdom, yOdom, tOdom = runI2CRoutine(V, W, xOdom, yOdom, tOdom)        
+        measuredSpeed = Twist()
+        Vreal, Wreal = runI2CRoutine(V, W, Vreal, Wreal)        
         ##q = quaternion_from_euler(0, 0, tOdom)
         #print(q)
         ##odomPosition.pose.pose.position.x = xOdom
@@ -126,6 +127,11 @@ def i2cBridge():
         ##odomPosition.child_frame_id = "base_footprint"
         ##odomPub.publish(odomPosition)
         #ball_pub.publish(Pose_ball)
+        if V < 0:
+            Vreal = -1*Vreal
+        measuredSpeed.linear.x = Vreal
+        measuredSpeed.angular.z = Wreal
+        velocPub.publish(measuredSpeed)
         rate.sleep()
 
 if __name__ == '__main__':
