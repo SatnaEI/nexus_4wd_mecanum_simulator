@@ -16,22 +16,17 @@ MotorWheel wheel2(11,12,14,15,&irq2);
 irqISR(irq3,isr3); 
 MotorWheel wheel3(9,8,16,17,&irq3);      
 irqISR(irq4,isr4); 
-MotorWheel wheel4(10,7,13,6,&irq4);      //18, 19 est devenu 13, 6
+MotorWheel wheel4(10,7,6,13,&irq4);      //18, 19 est devenu 13, 6
 Omni4WD Omni(&wheel1,&wheel2,&wheel3,&wheel4); // This will create a Omni4WD object called Omni4WD. 
 
-float x=0;
-float y=0;
-float theta=PI/2;
+
 
 float V;
 float W;
 
-bool b=true;
 
 char d='X';
 
-unsigned long t0;
-unsigned long t1;
 
 
 void setup() {   //TCCR0B=TCCR0B&0xf8|0x01; // warning!! it will change millis()   
@@ -140,82 +135,33 @@ Serial.println(W);
 Serial.print("V ");
 Serial.println(V);
 */
-if (b==false){
-  Serial.println(d);
-  t1=millis();
-  if (d=='Z'){
-     x=x+0.36*((t1-t0)/1000.0)*cos(theta);
-     y=y+0.36*((t1-t0)/1000.0)*sin(theta);
-     theta=theta;
-  }
-  
-  else if (d=='S'){
-    x=x-0.36*((t1-t0)/1000.0)*cos(theta);
-    y=y-0.36*((t1-t0)/1000.0)*sin(theta);
-    theta=theta;
-  }
-  
-  else if (d=='Q'){
-    x=x;
-    y=y;
-    theta=theta+1.648*((t1-t0)/1000.0);
-  }
-  
-  else if (d=='D'){
-    x=x;
-    y=y;
-    theta=theta-1.648*((t1-t0)/1000.0);
-  }
-  
-  else{
-    x=x;
-    y=y;
-    theta=theta;
-  }
-  
-  
-}
+
     
 
     //en continue
     switch (d) {
       // the keyboard
       case 'Z':
-        if (b==0){
-          t0=millis();
-        }
         avanzar(255);
-       
         break;
+        
       case 'S':
-        if (b==0){
-          t0=millis();
-        }
         retroceder(255);
-        
         break;
+        
       case 'Q':
-        if (b==0){
-          t0=millis();
-        }
-        girar_izquierda(125);
+        girar_izquierda(125);      
+        break;
         
-        break;
       case 'D':
-        if (b==0){
-          t0=millis();
-        }
         girar_derecha(125);
-
         break;
+        
       case 'X':
         parar();
-
         break;
     }
- 
-    b=false;
-    t0=t1;
+
 }
 
 void requestEvents(){
@@ -227,13 +173,14 @@ void requestEvents(){
   Serial.print("T= ");
   Serial.println(theta);
   */
-  String xs=String(x,2);
-  String ys=String(y,2);
-  String ts=String(theta,2);
-  String s=xs+"/"+ys+"/"+ts;
+  String vs=String(Omni.getCarSpeedMMPS());
+  String ws=String((int)(Omni.getCarSpeedRad()*100));
 
-  char l[20];
-  s.toCharArray(l,20);
+  String s=vs+"/"+ws;
+
+  char l[7];
+  s.toCharArray(l,7);
+  Serial.println(s);
   Wire.write(l);
 }
 
@@ -299,16 +246,19 @@ void receiveEvents(int howMany)
     W = -1.0 * String(nb2).toFloat();
   }
   dir(V,W);
+  /*
   Serial.print("V= ");
   Serial.println(V);
-    Serial.print("W= ");
+  Serial.print("W= ");
   Serial.println(W); 
+  */
+  /*
   Serial.print("X= ");
   Serial.println(x);
   Serial.print("Y= ");
   Serial.println(y);
   Serial.print("T= ");
   Serial.println(theta);
-
+*/
 }
 }
