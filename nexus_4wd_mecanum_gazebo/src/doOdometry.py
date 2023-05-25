@@ -165,6 +165,8 @@ def doOdometry():
         odomPosition.pose.pose.position.x = X
         odomPosition.pose.pose.position.y = Y
         odomPosition.pose.pose.orientation = Quaternion(q[0], q[1], q[2], q[3])
+        odomPosition.twist.twist.linear.x = Vreal
+        odomPosition.twist.twist.angular.z = Wreal
         odomPosition.header.frame_id = "odom"
         odomPosition.child_frame_id = "base_footprint"
         odomPub.publish(odomPosition)

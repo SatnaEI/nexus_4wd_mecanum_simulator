@@ -1,4 +1,4 @@
-controller_frequency: 10.0
+controller_frequency: 2.0
 
 TrajectoryPlannerROS:
   acc_lim_x: 0.5
@@ -11,24 +11,25 @@ TrajectoryPlannerROS:
   min_in_place_rotational_vel: 1.648
   escape_vel: -0.1
 
-  holonomic_robot: true
+  holonomic_robot: false
 
-  yaw_goal_tolerance: 1.0
-  xy_goal_tolerance: 0.15
+  yaw_goal_tolerance: 1.2
+  xy_goal_tolerance: 0.5
   latch_xy_goal_tolerance: true
 
-  sim_time: 1
+  sim_time: 5
   sim_granularity: 0.05
   angular_sim_granularity: 0.05
-  vx_samples: 8
-  vtheta_samples: 20
+  vx_samples: 20
+  vy_samples: 0
+  vtheta_samples: 40
 #  controller_frequency: 10.0
 
-  meter_scoring: false
+  meter_scoring: true
   path_distance_bias: 0.6
-  goal_distance_bias: 0.6
+  goal_distance_bias: 24.0
   occdist_scale: 0.05
-  heading_lookahead: 0.325
+  heading_lookahead: 0.1
   heading_scoring: true
   heading_scoring_timestep: 0.8
   dwa: false

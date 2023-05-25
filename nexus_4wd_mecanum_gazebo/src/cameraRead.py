@@ -2,6 +2,7 @@
 import time
 import os
 import rospy
+from geometry_msgs.msg import Twist
 
 
 
@@ -405,6 +406,7 @@ huskyLens= HuskyLensLibrary("I2C","",address=0x32)
 
 def cameraRead():
     rospy.init_node('cameraRead', anonymous=True)
+    velocPub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
     rate = rospy.Rate(1) # 1hz
     #OdomSub = rospy.Subscriber('/odom',Odometry,callbackSub)
     while not rospy.is_shutdown():
@@ -413,7 +415,10 @@ def cameraRead():
             print(data.ID)
             if data.ID == 1:
                 print("Stopping mission after successful reading")
-                os.system("rosnode kill move-base")
+                measuredSpeed = Twist()
+                os.system("rosnode kill move_base")
+                time.sleep(0.5)
+                velocPub.publish(measuredSpeed)
         except Exception as error:
             print(error)
         rate.sleep()
