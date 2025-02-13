@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<launch>
+  <node pkg="mbf_costmap_nav" type="mbf_costmap_nav" respawn="false" name="move_base_flex" launch-prefix="gdb -ex run --args" output="screen">
+    <param name="tf_timeout" value="1.5"/>
+    <param name="planner_max_retries" value="3"/>
+    <param name="SBPLLatticePlanner/primitive_filename" value="$(find ceres_navigation)/mprim/ceres_5cm.mprim"/>
+    <rosparam file="$(find nexus_4wd_mecanum_gazebo)/config/planners.yaml" command="load" />
+    <rosparam file="$(find nexus_4wd_mecanum_gazebo)/config/controllers.yaml" command="load" />
+    <rosparam file="$(find nexus_4wd_mecanum_gazebo)/config/recovery_behaviors.yaml" command="load" />
+    <rosparam file="$(find nexus_4wd_mecanum_gazebo)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+    <rosparam file="$(find nexus_4wd_mecanum_gazebo)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find nexus_4wd_mecanum_gazebo)/config/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find nexus_4wd_mecanum_gazebo)/config/local_costmap_params.yaml" command="load" />
+  </node>
+  
+  <!-- <node pkg="explore_lite" type="explore" respawn="true" name="explore" output="screen">
+    <rosparam file="$(find nexus_4wd_mecanum_gazebo)/config/exploration.yaml" command="load" />
+  </node> -->
+
+</launch>
